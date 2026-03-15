@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KI-Automatisierungen für Dienstleister</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0f0e0d;
+    --paper: #f5f2ee;
+    --accent: #1a1a2e;
+    --gold: #c9a84c;
+    --muted: #7a7468;
+    --border: #e0dbd3;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 4rem;
+    background: rgba(245, 242, 238, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .nav-cta {
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1.5px solid var(--gold);
+    padding-bottom: 2px;
+    transition: color 0.2s;
+  }
+  .nav-cta:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.1s;
+  }
+
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 800px;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.25s;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 520px;
+    font-weight: 300;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.55s;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 0.9rem 2.2rem;
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+
+  .btn-secondary {
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .btn-secondary:hover { color: var(--ink); border-color: var(--ink); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 3rem;
+    left: 4rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+  .hero-scroll::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  /* SECTION BASE */
+  section { padding: 6rem 4rem; }
+
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+  }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0 4rem;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin-top: 4rem;
+    border: 1px solid var(--border);
+  }
+
+  .service-card {
+    padding: 2.5rem;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+  .service-card:nth-child(even) { border-right: none; }
+  .service-card:nth-last-child(-n+2) { border-bottom: none; }
+  .service-card:hover { background: rgba(201,168,76,0.04); }
+
+  .service-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.5rem;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 1.2rem;
+  }
+
+  .service-name {
+    font-size: 1.05rem;
+    font-weight: 500;
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.01em;
+  }
+
+  .service-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .service-price {
+    display: inline-block;
+    margin-top: 1.2rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 0.3rem 0.8rem;
+  }
+
+  /* HOW IT WORKS */
+  .how-section { background: var(--ink); color: var(--paper); }
+  .how-section .section-title { color: var(--paper); }
+  .how-section .divider-inner { border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0; }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    margin-top: 3rem;
+  }
+
+  .step-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3.5rem;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .step-title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--paper);
+  }
+
+  .step-desc {
+    font-size: 0.88rem;
+    color: rgba(245,242,238,0.5);
+    line-height: 1.65;
+  }
+
+  /* WHY */
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+    margin-top: 3rem;
+  }
+
+  .why-list { list-style: none; }
+  .why-list li {
+    display: flex;
+    gap: 1rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.95rem;
+  }
+  .why-list li:first-child { border-top: 1px solid var(--border); }
+  .why-check {
+    color: var(--gold);
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .why-aside {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2.5rem;
+  }
+
+  .why-aside-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .why-aside-quote {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    color: var(--paper);
+  }
+
+  .why-aside-stat {
+    font-size: 2.5rem;
+    font-family: 'DM Serif Display', serif;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .why-aside-stat-label {
+    font-size: 0.82rem;
+    color: rgba(245,242,238,0.5);
+  }
+
+  /* CONTACT */
+  .contact-section {
+    text-align: center;
+    padding: 8rem 4rem;
+    background: var(--paper);
+  }
+
+  .contact-section .section-title { max-width: 100%; margin: 0 auto 1rem; }
+  .contact-section .section-sub {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 400px;
+    margin: 0 auto 3rem;
+  }
+
+  .contact-email {
+    display: inline-block;
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 4px;
+    transition: color 0.2s;
+  }
+  .contact-email:hover { color: var(--gold); }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 4rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .hero { padding: 7rem 1.5rem 4rem; }
+    section { padding: 4rem 1.5rem; }
+    .divider { margin: 0 1.5rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    .service-card { border-right: none; }
+    .service-card:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
+    .service-card:last-child { border-bottom: none; }
+    .steps { grid-template-columns: 1fr; gap: 2rem; }
+    .why-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .hero-scroll { display: none; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">Carlos — KI Automatisierung</a>
+  <a href="#kontakt" class="nav-cta">Kontakt aufnehmen</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-label">KI-Automatisierung für Dienstleister</p>
+  <h1 class="hero-title">Weniger Verwaltung.<br><em>Mehr Zeit für Klienten.</em></h1>
+  <p class="hero-sub">Ich baue automatische Systeme die Ihnen Stunden an Arbeit sparen — ohne dass Sie etwas Technisches verstehen müssen.</p>
+  <div class="hero-actions">
+    <a href="#kontakt" class="btn-primary">Kostenloses Gespräch</a>
+    <a href="#leistungen" class="btn-secondary">Leistungen ansehen</a>
+  </div>
+  <span class="hero-scroll">Nach unten scrollen</span>
+</section>
+
+<hr class="divider">
+
+<!-- SERVICES -->
+<section id="leistungen">
+  <p class="section-label reveal">Leistungen</p>
+  <h2 class="section-title reveal">Was ich für Sie automatisiere</h2>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <div class="service-number">01</div>
+      <div class="service-name">E-Mail Automatisierung</div>
+      <p class="service-desc">Eingehende Kundenanfragen werden automatisch von einer KI gelesen und beantwortet. Sie erhalten fertige Entwürfe — Sie müssen nur noch auf Senden drücken.</p>
+      <span class="service-price">ab 350 € einmalig</span>
+    </div>
+    <div class="service-card">
+      <div class="service-number">02</div>
+      <div class="service-name">Webseiten-Analyse & Reporting</div>
+      <p class="service-desc">Relevante Inhalte, Branchennews oder Wettbewerber-Updates werden automatisch zusammengefasst und täglich in Ihr Postfach geliefert.</p>
+      <span class="service-price">ab 250 € einmalig</span>
+    </div>
+    <div class="service-card">
+      <div class="service-number">03</div>
+      <div class="service-name">Dokumenten-Zusammenfassung</div>
+      <p class="service-desc">Verträge, Berichte und lange Dokumente werden automatisch auf das Wesentliche reduziert — in Sekunden statt Stunden.</p>
+      <span class="service-price">ab 300 € einmalig</span>
+    </div>
+    <div class="service-card">
+      <div class="service-number">04</div>
+      <div class="service-name">Individuelle Automatisierung</div>
+      <p class="service-desc">Sie haben einen spezifischen Ablauf der immer wieder Zeit kostet? Ich analysiere Ihren Prozess und baue eine maßgeschneiderte Lösung.</p>
+      <span class="service-price">Preis auf Anfrage</span>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <p class="section-label reveal">Ablauf</p>
+  <h2 class="section-title reveal">So einfach funktioniert die Zusammenarbeit</h2>
+  <div class="steps">
+    <div class="reveal">
+      <div class="step-num">1</div>
+      <div class="step-title">Kostenloses Erstgespräch</div>
+      <p class="step-desc">Wir besprechen in 30 Minuten welche Abläufe bei Ihnen die meiste Zeit kosten und wo Automatisierung am meisten bringt.</p>
+    </div>
+    <div class="reveal">
+      <div class="step-num">2</div>
+      <div class="step-title">Ich baue Ihr System</div>
+      <p class="step-desc">Innerhalb von 3–5 Werktagen erhalten Sie Ihre fertige Automatisierung — getestet und einsatzbereit.</p>
+    </div>
+    <div class="reveal">
+      <div class="step-num">3</div>
+      <div class="step-title">Sie sparen Zeit</div>
+      <p class="step-desc">Das System läuft automatisch. Kein Abo, keine Wartung, kein technisches Wissen nötig. Einmal einrichten — dauerhaft profitieren.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="vorteile">
+  <p class="section-label reveal">Warum ich</p>
+  <h2 class="section-title reveal">Kein Stundenlohn. Kein Risiko.</h2>
+  <div class="why-grid">
+    <ul class="why-list reveal">
+      <li><span class="why-check">→</span> Fixpreis — Sie wissen vorher genau was Sie zahlen</li>
+      <li><span class="why-check">→</span> Keine monatlichen Kosten oder versteckten Gebühren</li>
+      <li><span class="why-check">→</span> Lieferung in 3–5 Werktagen</li>
+      <li><span class="why-check">→</span> Persönliche Einführung und Erklärung inklusive</li>
+      <li><span class="why-check">→</span> Zufriedenheitsgarantie — ich liefere bis es funktioniert</li>
+    </ul>
+    <div class="why-aside reveal">
+      <p class="why-aside-label">Rechenbeispiel</p>
+      <p class="why-aside-quote">"20 E-Mails täglich, je 5 Minuten — das sind 100 Minuten pro Tag."</p>
+      <div class="why-aside-stat">100+</div>
+      <div class="why-aside-stat-label">Minuten täglich die Sie zurückgewinnen</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<section class="contact-section" id="kontakt">
+  <p class="section-label reveal">Kontakt</p>
+  <h2 class="section-title reveal">Bereit Zeit zu sparen?</h2>
+  <p class="section-sub reveal">Schreiben Sie mir — das Erstgespräch ist kostenlos und unverbindlich.</p>
+  <a href="mailto:syntivo@proton.me" class="contact-email reveal">syntivo@proton.me</a>
+</section>
+
+<!-- IMPRESSUM -->
+<section id="impressum" style="padding: 4rem; border-top: 1px solid var(--border); background: var(--paper);">
+  <p class="section-label">Impressum</p>
+  <p style="font-size: 0.9rem; color: var(--muted); line-height: 2; margin-top: 1rem;">
+    <strong style="color: var(--ink);">Angaben gemäß § 5 TMG</strong><br>
+    Carlos Böttche<br>
+    Ernst-Reuter Straße 3<br>
+    67373 Dudenhofen<br><br>
+    <strong style="color: var(--ink);">Kontakt</strong><br>
+    E-Mail: <a href="mailto:syntivo@proton.me" style="color: var(--gold);">syntivo@proton.me</a><br><br>
+    <strong style="color: var(--ink);">Hinweis gemäß § 19 UStG</strong><br>
+    Als Kleinunternehmer im Sinne von § 19 Abs. 1 UStG wird keine Umsatzsteuer berechnet.<br><br>
+    <strong style="color: var(--ink);">Haftungsausschluss</strong><br>
+    Die Inhalte dieser Seite wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann jedoch keine Gewähr übernommen werden.
+  </p>
+</section>
+
+<footer>
+  <span>Syntivo — KI-Automatisierung</span>
+  <span>Deutschland · 2026</span>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
